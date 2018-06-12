@@ -1,0 +1,5 @@
+== Still WIP
+
+== Why referring Neovim instead of Vim
+
+The same reason we refer to Vim instead of Vi
