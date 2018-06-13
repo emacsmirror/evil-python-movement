@@ -212,6 +212,24 @@ Based off `evil-forward-char'."
     (evil-previous-line)
     (line-end-position)))
 
+(defun 😈-🐍-move-to-then-to-end-of-block (move-to-fn movement-name noerror)
+  "Move to wherever using MOVE-TO-FN, then move to end of block.
+
+Use MOVEMENT-NAME for error message.
+NOERROR is non-nil → reported error.
+Moves to end of block and end of line."
+  (if-let* ((maybe-new-pos (save-excursion
+			     (funcall move-to-fn)))
+	    (maybe-block-end (progn
+			       (goto-char maybe-new-pos)
+			       (call-interactively '😈-🐍-py-block-end))))
+      (progn
+	(goto-char maybe-block-end)
+	(evil-end-of-line)))
+  ;; else, report error
+  (unless noerror
+    (message "Cannot move %s-wise" movement-name)))
+
 ;;[M
 (evil-define-motion 😈-🐍-move-lsb-M (count noerror)
   "Mimic Neovim's ]M movement in Python editing.
@@ -221,31 +239,28 @@ Based off `evil-forward-char'."
   :jump t
   :type inclusive ;; (-any '(line inclusive exclusive block) )
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (if-let ((new-pos (save-excursion
-		      (evil-first-non-blank)
-		      (😈-🐍-common-python-movement
-		       count
-		       noerror
-		       #'😈-🐍-move-backwards-to-def
-		       ;;↓ different logging here is intentional
-		       "[M"))))
-      (progn
-	(goto-char new-pos)
-	(goto-char (call-interactively '😈-🐍-py-block-end))
-	(evil-end-of-line))))
+  (😈-🐍-move-to-then-to-end-of-block
+   (lambda ()
+     (evil-first-non-blank)
+     (😈-🐍-common-python-movement count
+				   noerror
+				   #'😈-🐍-move-backwards-to-def
+				   ;;↓ different logging here is intentional
+				   "[M"))
+   "[M" noerror))
 
 ;;]M
 (evil-define-motion 😈-🐍-move-rsb-M (count noerror)
   :jump t
   :type inclusive ;; (-any '(line inclusive exclusive block) )
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  ;; reposition if necessary (when looking at blank lines)
-  (cl-loop until (not (s-blank? (thing-at-point 'line)))
-	   do (next-line)
-	   ((has-blank-untilst )))
-  (progn
-    (goto-char (call-interactively '😈-🐍-py-block-end))
-    (evil-end-of-line)))
+  (😈-🐍-move-to-then-to-end-of-block
+   (lambda ()
+     ;; reposition if necessary (when looking at blank lines)
+     (cl-loop until (not (s-blank? (thing-at-point 'line)))
+	      do (next-line))
+     (goto-char (call-interactively '😈-🐍-py-block-end)))
+   "]M" noerror))
 
 ;;[]
 (evil-define-motion 😈-🐍-move-lsb-rsb (count noerror)
@@ -254,10 +269,6 @@ Based off `evil-forward-char'."
 ;;][
 (evil-define-motion 😈-🐍-move-rsb-lsb (count noerror)
   (error "Not implemented."))
-
-
-
-
 
 
 ;; http://ergoemacs.org/emacs/elisp_run_elisp_when_file_opens.html
