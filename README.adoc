@@ -1,6 +1,17 @@
-== Still WIP
+= evil-python-movement
 
-== Why referring Neovim instead of Vim
+Port of Python🐍 movement in Neovim to Evil😈+Emacs.
+
+For a visual explanation, see test/test_movement_here.py:
+
+[source,python]
+----
+include::test/test_movement_here.py[]
+----
+
+This work was inspired by https://stackoverflow.com/a/28284564[this stackoverflow answer]
+
+== Why referring to Neovim instead of Vim
 
 The same reason we refer to Vim instead of Vi
 
