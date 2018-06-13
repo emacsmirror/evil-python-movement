@@ -59,13 +59,24 @@ Cursor will be placed somewhere around the line annotated as such."
   "Check that current comment should match EXPECTED.
 
 Uses the `should' macro (not `assert')."
-  (let* ((current-line (thing-at-point 'line))
-	 ;; ⎡# …⎦
-	 (full-current-comment (-first-item (s-match "#.*" current-line)))
-	 ;; the ⎡…⎦ in ⎡# …⎦ (mind the space)
-	 (current-comment (substring full-current-comment 2))
-	 (should
-	  (s-equals? current-comment expected)))))
+  (should
+   (let* ((current-line (thing-at-point 'line))
+	  ;; ⎡# …⎦
+	  (full-current-comment (-first-item (s-match "#.*" current-line)))
+	  ;; the ⎡…⎦ in ⎡# …⎦ (mind the space)
+	  (current-comment (substring full-current-comment 2))
+	  (s-equals? current-comment expected)
+	  ))))
+(bobp)
+(ert-deftest 😈-🐍-unit-test-move-to-regex ()
+  (with-temp-buffer
+    (insert "  aaa\n  bbb  \n  ccc  ")
+    (😈-🐍-move-to-regex "aaa" #'previous-line)
+    (should (s-equals? "  aaa\n"
+		       (thing-at-point 'line)))
+    (😈-🐍-move-to-regex "ccc" #'next-line)
+    (should (s-equals? "  ccc  "
+		       (thing-at-point 'line)))))
 
 (ert-deftest 😈-🐍-unit-test-lsb-lsb ()
   "[["

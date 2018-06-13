@@ -35,6 +35,51 @@
 
 (require 'dash)
 (require 'evil)
+(require 'rx)
+(require 's)
+
+(defconst 😈-🐍-top-level-def-regex
+  (rx
+   line-start
+   (|
+    ;; async_funcdef | funcdef
+    (and (? "async" (+ blank)) "def" (+ blank))
+    ;; class
+    (and "class" (+ blank))))
+  "Regex for top level def (func or class)
+
+See https://docs.python.org/3/reference/grammar.html.")
+
+(defconst 😈-🐍-def-regex
+  (rx
+   line-start
+   (* blank) ;; indent
+   (|
+    ;; async_funcdef | funcdef
+    (and (? "async" (+ blank)) "def" (+ blank))
+    ;; class
+    (and "class" (+ blank))))
+  "Regex for def (func or class)
+
+See https://docs.python.org/3/reference/grammar.html.")
+
+(defun 😈-🐍-move-to-regex (regex next-line-func)
+  "Call NEXT-LINE-FUNC until REGEX matches line.
+
+Assumes line movement
+Note: need _partial_ match, not full"
+  (funcall next-line-func)
+  (let ((at-first-line (save-excursion
+			 (beginning-of-line)
+			 (bobp)))
+	(at-last-line (save-excursion
+			(end-of-line)
+			(eobp))))
+    (if (s-match regex (thing-at-point 'line))
+	(point)
+      ;; else keep searching (if possible to move)
+      (if (not (or at-first-line at-last-line))
+	  (😈-🐍-move-to-regex regex next-line-func)))))
 
 (defun 😈-🐍-common-python-movement (count noerror new-pos-function mov-name)
   "Try to move to position or report failure.
