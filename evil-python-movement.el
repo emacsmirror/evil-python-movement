@@ -177,9 +177,9 @@ Based off `evil-forward-char'."
 
 
 
-  ;; http://ergoemacs.org/emacs/elisp_run_elisp_when_file_opens.html
-  ;; Local Variables:
-  ;; eval: (evil-set-register ?e "😈-🐍-"(evil-set-register ?e "😈-🐍-"))
-  ;; End:
-  (provide 'evil-python-movement)
+;; http://ergoemacs.org/emacs/elisp_run_elisp_when_file_opens.html
+;; Local Variables:
+;; eval: (evil-set-register ?e "😈-🐍-")
+;; End:
+(provide 'evil-python-movement)
 ;;; evil-python-movement.el ends here
