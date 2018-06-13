@@ -3,3 +3,7 @@
 == Why referring Neovim instead of Vim
 
 The same reason we refer to Vim instead of Vi
+
+== License
+
+While _my_ code is GPLv3,footnote:[every elisp file has its license] the Python sample from the https://stackoverflow.com/a/28284564[stackoverflow answer] https://stackoverflow.com/help/licensing[is licensed under terms of CC BY-SA 3.0].

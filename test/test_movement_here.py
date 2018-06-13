@@ -1,3 +1,7 @@
+# Originally from https://stackoverflow.com/a/28284564
+# This file is licensed under the terms of CC BY-SA 3.0
+# See https://stackoverflow.com/help/licensing 
+# See https://creativecommons.org/licenses/by-sa/3.0/
 class Mapping:                              # [[[[
     def __init__(self, iterable):
         pass
