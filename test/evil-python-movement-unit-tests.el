@@ -110,6 +110,22 @@ Uses the `should' macro (not `assert')."
    (😈-🐍-move-lsb-m)
    (😈-🐍-unit-test-should-match-comment "[[ or [m[m")))
 
+(ert-deftest 😈-🐍-unit-test-rsb-m ()
+  "]m"
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-rsb-m)
+   (😈-🐍-unit-test-should-match-comment "]m")))
+
+(ert-deftest 😈-🐍-unit-test-rsb-m×2 ()
+  "]m×2"
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-rsb-m 2)
+   (😈-🐍-unit-test-should-match-comment "]] or ]m]m"))
+  ;; same test, but inputted differently
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-rsb-m)
+   (😈-🐍-move-rsb-m)
+   (😈-🐍-unit-test-should-match-comment "]] or ]m]m")))
 
 (ert-deftest 😈-🐍-unit-test-lsb-M ()
   "[M"
