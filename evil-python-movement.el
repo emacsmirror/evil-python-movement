@@ -164,7 +164,7 @@ Based off `evil-forward-char'."
 			(let ((p (😈-🐍-common-python-movement
 				  count
 				  noerror
-				  #'py-backward-block-or-clause ;; or py-backward-block?
+				  #'😈-🐍-move-backwards-to-def
 				  "[m")))
 			  p))))
     (goto-char new-pos)))
@@ -182,8 +182,8 @@ Based off `evil-forward-char'."
   (😈-🐍-common-python-movement
    count
    noerror
-   #'py-forward-block-or-clause ;; or py-forward-block?
-   "[m"))
+   #'😈-🐍-move-forward-to-def
+   "]m"))
 
 (defun 😈-🐍-py-block-end (&optional indent)
   "Return the point of end of line of (current) INDENT."
@@ -226,15 +226,33 @@ Based off `evil-forward-char'."
 		      (😈-🐍-common-python-movement
 		       count
 		       noerror
-		       #'py-backward-block-or-clause ;; or py-backward-block?
-		       "[m"))))
+		       #'😈-🐍-move-backwards-to-def
+		       ;;↓ different logging here is intentional
+		       "[M"))))
       (progn
 	(goto-char new-pos)
 	(goto-char (call-interactively '😈-🐍-py-block-end))
 	(evil-end-of-line))))
 
 ;;]M
-(evil-define-motion 😈-🐍-move-lsb-M (count noerror)
+(evil-define-motion 😈-🐍-move-rsb-M (count noerror)
+  :jump t
+  :type inclusive ;; (-any '(line inclusive exclusive block) )
+  (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
+  ;; reposition if necessary (when looking at blank lines)
+  (cl-loop until (not (s-blank? (thing-at-point 'line)))
+	   do (next-line)
+	   ((has-blank-untilst )))
+  (progn
+    (goto-char (call-interactively '😈-🐍-py-block-end))
+    (evil-end-of-line)))
+
+;;[]
+(evil-define-motion 😈-🐍-move-lsb-rsb (count noerror)
+  (error "Not implemented."))
+
+;;][
+(evil-define-motion 😈-🐍-move-rsb-lsb (count noerror)
   (error "Not implemented."))
 
 

@@ -20,7 +20,6 @@
 
 ;;; Commentary:
 
-;; 
 
 ;;; Code:
 
@@ -59,12 +58,12 @@ Cursor will be placed somewhere around the line annotated as such."
   "Check that current comment should match EXPECTED.
 
 Uses the `should' macro (not `assert')."
-  (should
-   (let* ((current-line (thing-at-point 'line))
-	  ;; ⎡# …⎦
-	  (full-current-comment (-first-item (s-match "#.*" current-line)))
-	  ;; the ⎡…⎦ in ⎡# …⎦ (mind the space)
-	  (current-comment (substring full-current-comment 2)))
+  (let* ((current-line (thing-at-point 'line))
+	 ;; ⎡# …⎦
+	 (full-current-comment (-first-item (s-match "#.*" current-line)))
+	 ;; the ⎡…⎦ in ⎡# …⎦ (mind the space)
+	 (current-comment (substring full-current-comment 2)))
+    (should
      (s-equals? current-comment expected))))
 
 (ert-deftest 😈-🐍-unit-test-move-to-regex ()
@@ -93,6 +92,46 @@ Uses the `should' macro (not `assert')."
    (😈-🐍-move-lsb-lsb)
    (😈-🐍-move-lsb-lsb)
    (😈-🐍-unit-test-should-match-comment "[[[[")))
+
+(ert-deftest 😈-🐍-unit-test-lsb-m ()
+  "[m"
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-lsb-m)
+   (😈-🐍-unit-test-should-match-comment "[m")))
+
+(ert-deftest 😈-🐍-unit-test-lsb-m×2 ()
+  "[m×2"
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-lsb-m 2)
+   (😈-🐍-unit-test-should-match-comment "[[ or [m[m"))
+  ;; same test, but inputted differently
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-lsb-m)
+   (😈-🐍-move-lsb-m)
+   (😈-🐍-unit-test-should-match-comment "[[ or [m[m")))
+
+
+(ert-deftest 😈-🐍-unit-test-lsb-M ()
+  "[M"
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-lsb-M)
+   (😈-🐍-unit-test-should-match-comment "[M")
+   ;; test at end of line
+   (should (= (point)
+	      (save-excursion
+		(evil-end-of-line)
+		(point))))))
+
+(ert-deftest 😈-🐍-unit-test-rsb-M ()
+  "]M"
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-rsb-M)
+   (😈-🐍-unit-test-should-match-comment "]M")
+   ;; test at end of line
+   (should (= (point)
+	      (save-excursion
+		(evil-end-of-line)
+		(point))))))
 
 
 ;; http://ergoemacs.org/emacs/elisp_run_elisp_when_file_opens.html
