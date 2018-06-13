@@ -64,9 +64,8 @@ Uses the `should' macro (not `assert')."
 	  ;; ⎡# …⎦
 	  (full-current-comment (-first-item (s-match "#.*" current-line)))
 	  ;; the ⎡…⎦ in ⎡# …⎦ (mind the space)
-	  (current-comment (substring full-current-comment 2))
-	  (s-equals? current-comment expected)
-	  ))))
+	  (current-comment (substring full-current-comment 2)))
+     (s-equals? current-comment expected))))
 
 (ert-deftest 😈-🐍-unit-test-move-to-regex ()
   (with-temp-buffer

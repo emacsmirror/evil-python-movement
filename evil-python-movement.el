@@ -81,6 +81,22 @@ Note: need _partial_ match, not full"
       (if (not (or at-first-line at-last-line))
 	  (😈-🐍-move-to-regex regex next-line-func)))))
 
+(defsubst 😈-🐍-move-backwards-to-top-level-def ()
+  "Keep moving previous-line-y until reach previous top level def."
+  (😈-🐍-move-to-regex 😈-🐍-top-level-def-regex #'previous-line))
+
+(defsubst 😈-🐍-move-forward-to-top-level-def ()
+  "Keep moving next-line-y until reach next top level def."
+  (😈-🐍-move-to-regex 😈-🐍-top-level-def-regex #'next-line))
+
+(defsubst 😈-🐍-move-backwards-to-def ()
+  "Keep moving previous-line-y until reach previous def."
+  (😈-🐍-move-to-regex 😈-🐍-def-regex #'previous-line))
+
+(defsubst 😈-🐍-move-forward-to-def ()
+  "Keep moving next-line-y until reach next def."
+  (😈-🐍-move-to-regex 😈-🐍-def-regex #'next-line))
+
 (defun 😈-🐍-common-python-movement (count noerror new-pos-function mov-name)
   "Try to move to position or report failure.
 
@@ -114,7 +130,10 @@ Based off `evil-forward-char'."
   :type inclusive
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (😈-🐍-common-python-movement count noerror #'py-backward-top-level "[["))
+  (😈-🐍-common-python-movement count
+				noerror
+				#'😈-🐍-move-backwards-to-top-level-def
+				"[["))
 
 ;; ]]
 (evil-define-motion 😈-🐍-move-rsb-rsb (count noerror)
@@ -126,8 +145,9 @@ Based off `evil-forward-char'."
   :type inclusive
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (😈-🐍-common-python-movement count noerror #'py-forward-top-level "]]")
-  )
+  (😈-🐍-common-python-movement
+   count noerror
+   #'😈-🐍-move-forward-to-top-level-def "]]"))
 
 ;; [m
 (evil-define-motion 😈-🐍-move-lsb-m (count noerror)
