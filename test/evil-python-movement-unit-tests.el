@@ -67,7 +67,7 @@ Uses the `should' macro (not `assert')."
 	  (current-comment (substring full-current-comment 2))
 	  (s-equals? current-comment expected)
 	  ))))
-(bobp)
+
 (ert-deftest 😈-🐍-unit-test-move-to-regex ()
   (with-temp-buffer
     (insert "  aaa\n  bbb  \n  ccc  ")
