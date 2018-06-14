@@ -22,7 +22,8 @@
 
 
 ;;; Code:
-
+(eval-when-compile
+  (require 'cl))
 (require 'ert)
 (require 'evil)
 (require 'f)
@@ -30,7 +31,12 @@
 ;; TODO: (require 'evil-python-movement)
 
 ;; Infrastructure
-(assert (file-readable-p "test_movement_here.py"))
+(defvar 😈-🐍-unit-test-python-script-to-test-against
+  (concat
+   (file-name-as-directory (locate-dominating-file "." "test/test_movement_here.py"))
+   "test/test_movement_here.py"))
+
+(assert (file-readable-p 😈-🐍-unit-test-python-script-to-test-against))
 
 (defvar 😈-🐍-unit-test-sample-buffer-cache
   nil
@@ -43,7 +49,7 @@ Cursor will be placed somewhere around the line annotated as such."
   `(with-temp-buffer
      (insert ,(or 😈-🐍-unit-test-sample-buffer-cache
 		  (setq 😈-🐍-unit-test-sample-buffer-cache
-			(f-read "test_movement_here.py"))))
+			(f-read 😈-🐍-unit-test-python-script-to-test-against))))
      ;; place the cursor at annotated line
      (while (and (not (s-match "#.*CURSOR" (thing-at-point 'line)))
 		 (< 1 (save-excursion
@@ -154,9 +160,7 @@ Uses the `should' macro (not `assert')."
    (😈-🐍-unit-test-should-match-comment "<--- CURSOR")
    (😈-🐍-move-lsb-lsb)
    (😈-🐍-py-block-end)
-   (😈-🐍-unit-test-should-match-comment "][")
-   ))
-
+   (😈-🐍-unit-test-should-match-comment "][")))
 ;;(ert-deftest 😈-🐍-unit-test-indentation-and-parentheses ()
 ;; TODO
 ;;  )

@@ -1,0 +1,16 @@
+#!/usr/bin/zsh -fxv
+
+# suicide on error
+set -e
+
+# move to location of this script
+path_of_this_script=${(%):-%x}
+cd ${path_of_this_script:h:A}
+
+bemacs=${EMACS:-emacs}
+
+$bemacs -Q -batch \
+	-l test/setup-unit-tests.el \
+	-l ./evil-python-movement.el \
+	-l test/evil-python-movement-unit-tests.el \
+	-f ert-run-tests-batch-and-exit
