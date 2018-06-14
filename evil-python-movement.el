@@ -83,19 +83,19 @@ Note: need _partial_ match, not full"
 
 (defsubst 😈-🐍-move-backwards-to-top-level-def ()
   "Keep moving previous-line-y until reach previous top level def."
-  (😈-🐍-move-to-regex 😈-🐍-top-level-def-regex #'previous-line))
+  (😈-🐍-move-to-regex 😈-🐍-top-level-def-regex #'evil-previous-line))
 
 (defsubst 😈-🐍-move-forward-to-top-level-def ()
   "Keep moving next-line-y until reach next top level def."
-  (😈-🐍-move-to-regex 😈-🐍-top-level-def-regex #'next-line))
+  (😈-🐍-move-to-regex 😈-🐍-top-level-def-regex #'evil-next-line))
 
 (defsubst 😈-🐍-move-backwards-to-def ()
   "Keep moving previous-line-y until reach previous def."
-  (😈-🐍-move-to-regex 😈-🐍-def-regex #'previous-line))
+  (😈-🐍-move-to-regex 😈-🐍-def-regex #'evil-previous-line))
 
 (defsubst 😈-🐍-move-forward-to-def ()
   "Keep moving next-line-y until reach next def."
-  (😈-🐍-move-to-regex 😈-🐍-def-regex #'next-line))
+  (😈-🐍-move-to-regex 😈-🐍-def-regex #'evil-next-line))
 
 (defun 😈-🐍-common-python-movement (count noerror new-pos-function mov-name)
   "Try to move to position or report failure.
@@ -185,32 +185,35 @@ Based off `evil-forward-char'."
    #'😈-🐍-move-forward-to-def
    "]m"))
 
-(defun 😈-🐍-py-block-end (&optional indent)
-  "Return the point of end of line of (current) INDENT."
-  (interactive
-   (list (save-excursion
-	   (evil-first-non-blank)
-	   (length (buffer-substring-no-properties
-		    (line-beginning-position)
-		    (point))))))
-  (save-excursion
-    (while
-	(and
-	 ;; reached the end of buffer
-	 (not (= (line-end-position) (point-max)))
-	 (or
-	  ;; indentation doesn't change for new def/class
-	  (<= indent (save-excursion
+(defun 😈-🐍-py-block-end ()
+  "Return the point of end of line of current indent."
+  (let ((target-indent (save-excursion
+			 (evil-first-non-blank)
+			 (length (buffer-substring-no-properties
+				  (line-beginning-position)
+				  (point))))))
+    ;; now, look for end of block
+    (cl-loop
+     do ;; at least, move from start
+     (evil-next-line)
+     until (or
+	    ;; reached the end of buffer
+	    (= (line-end-position) (point-max))
+	    ;; indentation changed for new def/class
+	    ;; ruling out blank lines
+	    (and (not (s-blank-str? (thing-at-point 'line)))
+		 (>= target-indent
+		     (save-excursion
 		       (evil-first-non-blank)
 		       (let ((this-line-indent (buffer-substring-no-properties
 						(line-beginning-position)
 						(point))))
-			 (length this-line-indent))))
-	  ;; empty line
-	  ))
-      (evil-next-line))
-    (evil-previous-line)
-    (line-end-position)))
+			 (length this-line-indent)))))))
+    (cl-loop do (evil-previous-line)
+	     until (not (s-blank-str? (thing-at-point 'line))))
+    ;; return end-of-line position
+    (evil-end-of-line)
+    (point)))
 
 (defun 😈-🐍-move-to-then-to-end-of-block (move-to-fn movement-name noerror)
   "Move to wherever using MOVE-TO-FN, then move to end of block.
@@ -222,7 +225,7 @@ Moves to end of block and end of line."
 			     (funcall move-to-fn)))
 	    (maybe-block-end (progn
 			       (goto-char maybe-new-pos)
-			       (call-interactively '😈-🐍-py-block-end))))
+			       (😈-🐍-py-block-end))))
       (progn
 	(goto-char maybe-block-end)
 	(evil-end-of-line)))
@@ -257,9 +260,9 @@ Based off `evil-forward-char'."
   (😈-🐍-move-to-then-to-end-of-block
    (lambda ()
      ;; reposition if necessary (when looking at blank lines)
-     (cl-loop until (not (s-blank? (thing-at-point 'line)))
-	      do (next-line))
-     (goto-char (call-interactively '😈-🐍-py-block-end)))
+     (cl-loop until (not (s-blank-str? (thing-at-point 'line)))
+	      do (evil-next-line))
+     (goto-char (😈-🐍-py-block-end)))
    "]M" noerror))
 
 ;;[]

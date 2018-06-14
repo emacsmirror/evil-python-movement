@@ -149,6 +149,18 @@ Uses the `should' macro (not `assert')."
 		(evil-end-of-line)
 		(point))))))
 
+(ert-deftest 😈-🐍-unit-test-end-of-block ()
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-unit-test-should-match-comment "<--- CURSOR")
+   (😈-🐍-move-lsb-lsb)
+   (😈-🐍-py-block-end)
+   (😈-🐍-unit-test-should-match-comment "][")
+   ))
+
+;;(ert-deftest 😈-🐍-unit-test-indentation-and-parentheses ()
+;; TODO
+;;  )
+
 
 ;; http://ergoemacs.org/emacs/elisp_run_elisp_when_file_opens.html
 ;; Local Variables:
