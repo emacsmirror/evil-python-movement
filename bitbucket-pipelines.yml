@@ -5,6 +5,7 @@
 # You can specify a custom docker image from Docker Hub as your build environment.
 # image: atlassian/default-image:latest
 
+image: silex/emacs
 pipelines:
   default:
     - step:
