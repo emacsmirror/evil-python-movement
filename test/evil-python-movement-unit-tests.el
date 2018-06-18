@@ -72,6 +72,15 @@ Uses the `should' macro (not `assert')."
     (should
      (s-equals? current-comment expected))))
 
+(defsubst 😈-🐍-unit-test-should-be-at-end-of-line ()
+  "Check that we're currently looking at the end of line.
+
+Uses the `should' macro (not `assert')."
+  (should (= (point)
+	     (save-excursion
+	       (evil-end-of-line)
+	       (point)))))
+
 (ert-deftest 😈-🐍-unit-test-move-to-regex ()
   (with-temp-buffer
     (insert "  aaa\n  bbb  \n  ccc  ")
@@ -138,22 +147,14 @@ Uses the `should' macro (not `assert')."
   (😈-🐍-unit-test-with-sample-buffer
    (😈-🐍-move-lsb-M)
    (😈-🐍-unit-test-should-match-comment "[M")
-   ;; test at end of line
-   (should (= (point)
-	      (save-excursion
-		(evil-end-of-line)
-		(point))))))
+   (😈-🐍-unit-test-should-be-at-end-of-line)))
 
 (ert-deftest 😈-🐍-unit-test-rsb-M ()
   "]M"
   (😈-🐍-unit-test-with-sample-buffer
    (😈-🐍-move-rsb-M)
    (😈-🐍-unit-test-should-match-comment "]M")
-   ;; test at end of line
-   (should (= (point)
-	      (save-excursion
-		(evil-end-of-line)
-		(point))))))
+   (😈-🐍-unit-test-should-be-at-end-of-line)))
 
 (ert-deftest 😈-🐍-unit-test-end-of-block ()
   (😈-🐍-unit-test-with-sample-buffer
@@ -161,6 +162,23 @@ Uses the `should' macro (not `assert')."
    (😈-🐍-move-lsb-lsb)
    (😈-🐍-py-block-end)
    (😈-🐍-unit-test-should-match-comment "][")))
+
+(ert-deftest 😈-🐍-unit-test-rsb-lsb ()
+  "]["
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-rsb-lsb)
+   (😈-🐍-unit-test-should-match-comment "][")
+   (😈-🐍-unit-test-should-be-at-end-of-line)))
+
+(ert-deftest 😈-🐍-unit-test-rsb-lsb-from-class-def ()
+  "][ from class def"
+  (😈-🐍-unit-test-with-sample-buffer
+   (😈-🐍-move-lsb-lsb)
+   (should (s-match "^class" (thing-at-point 'line)))
+   (😈-🐍-move-rsb-lsb)
+   (😈-🐍-unit-test-should-match-comment "][")
+   (😈-🐍-unit-test-should-be-at-end-of-line)))
+
 ;;(ert-deftest 😈-🐍-unit-test-indentation-and-parentheses ()
 ;; TODO
 ;;  )

@@ -267,11 +267,23 @@ Based off `evil-forward-char'."
 
 ;;[]
 (evil-define-motion 😈-🐍-move-lsb-rsb (count noerror)
-  (error "Not implemented."))
+  :jump t
+  :type inclusive
+  (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
+  (😈-🐍-move-lsb-lsb count noerror)
+  (😈-🐍-py-block-end))
 
 ;;][
 (evil-define-motion 😈-🐍-move-rsb-lsb (count noerror)
-  (error "Not implemented."))
+  :jump t
+  :type inclusive
+  (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
+  (let ((already-at-top-level-def (s-match 😈-🐍-top-level-def-regex
+  					   (thing-at-point 'line))
+  				  )) ;; *must go to previous top level
+    (unless already-at-top-level-def
+      (😈-🐍-move-lsb-lsb count noerror)))
+  (😈-🐍-py-block-end))
 
 
 ;; http://ergoemacs.org/emacs/elisp_run_elisp_when_file_opens.html
