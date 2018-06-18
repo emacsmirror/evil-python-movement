@@ -10,5 +10,6 @@ pipelines:
   default:
     - step:
         script:
+          - git --version
           - emacs --version
           - ./runtests
