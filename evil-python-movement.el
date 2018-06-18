@@ -64,7 +64,7 @@ See https://docs.python.org/3/reference/grammar.html.")
 See https://docs.python.org/3/reference/grammar.html.")
 
 (defun 😈-🐍-move-to-regex (regex next-line-func)
-  "Call NEXT-LINE-FUNC until REGEX matches line.
+  "Call NEXT-LINE-FUNC until line is a match for REGEX.
 
 Assumes line movement
 Note: need _partial_ match, not full"
