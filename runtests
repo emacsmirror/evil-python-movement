@@ -1,11 +1,12 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 # suicide on error
 set -e
 
 # move to location of this script
-path_of_this_script=${(%):-%x}
-cd ${path_of_this_script:h:A}
+# https://stackoverflow.com/a/4774063/3637404
+path_of_this_script="$(cd "$(dirname "$0")"; pwd -P )"
+cd "${path_of_this_script}"
 
 bemacs=${EMACS:-emacs}
 
