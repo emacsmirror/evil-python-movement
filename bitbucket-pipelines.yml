@@ -11,7 +11,7 @@ pipelines:
     - step:
         script:
           - apt-get update
-          - apt-get install git
+          - apt-get -qq -yy install git
           - git --version
           - emacs --version
           - ./runtests
