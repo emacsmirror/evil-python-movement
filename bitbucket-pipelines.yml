@@ -10,4 +10,5 @@ pipelines:
   default:
     - step:
         script:
+          - emacs --version
           - ./runtests
