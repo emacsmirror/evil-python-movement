@@ -11,6 +11,27 @@ include::test/test_movement_here.py[]
 
 This work was inspired by https://stackoverflow.com/a/28284564[this stackoverflow answer]
 
+== Install and use
+
+Download or clone this repo to some folder, then load main file.
+
+[source,emacs-lisp]
+----
+(load-file "/path/to/evil-python-movement.el/evil-python-movement.el")
+
+(require 'evil-python-movement')
+(evil-define-key 'normal python-mode-map "[[" '😈-🐍-move-lsb-lsb)
+(evil-define-key 'normal python-mode-map "]]" '😈-🐍-move-rsb-rsb)
+(evil-define-key 'normal python-mode-map "[m" '😈-🐍-move-lsb-m  )
+(evil-define-key 'normal python-mode-map "]m" '😈-🐍-move-rsb-m  )
+(evil-define-key 'normal python-mode-map "[M" '😈-🐍-Move-lsb-M  )
+(evil-define-key 'normal python-mode-map "]M" '😈-🐍-Move-rsb-M  )
+(evil-define-key 'normal python-mode-map "[]" '😈-🐍-move-lsb-rsb)
+(evil-define-key 'normal python-mode-map "][" '😈-🐍-move-lsb-rsb))
+----
+
+And that's it.
+
 == Why referring to Neovim instead of Vim
 
 The same reason we refer to Vim instead of Vi
