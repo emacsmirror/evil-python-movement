@@ -1,4 +1,4 @@
-#!/usr/bin/zsh -fxv
+#!/usr/bin/env zsh
 
 # suicide on error
 set -e
