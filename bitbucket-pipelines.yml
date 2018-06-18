@@ -10,7 +10,7 @@ pipelines:
   default:
     - step:
         script:
-          - sudo apt-get install git
+          - apt-get install git
           - git --version
           - emacs --version
           - ./runtests
