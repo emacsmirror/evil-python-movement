@@ -124,7 +124,7 @@ Returns new position or nil."
       (goto-char maybe-new-position))))
 
 ;; [[
-;;;###autoload
+;;;###autoload(autoload 'evil-python-move-lsb-lsb "evil-python-movement" nil t)
 (evil-define-motion evil-python-move-lsb-lsb (count noerror)
   "Mimic Neovim's [[ movement in Python editing.
 
@@ -140,7 +140,7 @@ Based off `evil-forward-char'."
 				      "[["))
 
 ;; ]]
-;;;###autoload
+;;;###autoload(autoload 'evil-python-move-rsb-rsb "evil-python-movement" nil t)
 (evil-define-motion evil-python-move-rsb-rsb (count noerror)
   "Mimic Neovim's ]] movement in Python editing.
 
@@ -155,7 +155,7 @@ Based off `evil-forward-char'."
    #'evil-python-move-forward-to-top-level-def "]]"))
 
 ;; [m
-;;;###autoload
+;;;###autoload(autoload 'evil-python-move-lsb-m "evil-python-movement" nil t)
 (evil-define-motion evil-python-move-lsb-m (count noerror)
   "Mimic Neovim's [m movement in Python editing.
 
@@ -176,7 +176,7 @@ Based off `evil-forward-char'."
     (goto-char new-pos)))
 
 ;; ]m
-;;;###autoload
+;;;###autoload(autoload 'evil-python-move-rsb-m "evil-python-movement" nil t)
 (evil-define-motion evil-python-move-rsb-m (count noerror)
   "Mimic Neovim's ]m movement in Python editing.
 
@@ -241,7 +241,7 @@ Moves to end of block and end of line."
     (message "Cannot move %s-wise" movement-name)))
 
 ;;[M
-;;;###autoload
+;;;###autoload(autoload 'evil-python-move-lsb-M "evil-python-movement" nil t)
 (evil-define-motion evil-python-move-lsb-M (count noerror)
   "Mimic Neovim's ]M movement in Python editing.
 
@@ -261,7 +261,7 @@ Based off `evil-forward-char'."
    "[M" noerror))
 
 ;;]M
-;;;###autoload
+;;;###autoload(autoload 'evil-python-move-rsb-M "evil-python-movement" nil t)
 (evil-define-motion evil-python-move-rsb-M (count noerror)
   :jump t
   :type inclusive ;; (-any '(line inclusive exclusive block) )
@@ -275,7 +275,7 @@ Based off `evil-forward-char'."
    "]M" noerror))
 
 ;;[]
-;;;###autoload
+;;;###autoload(autoload 'evil-python-move-lsb-rsb "evil-python-movement" nil t)
 (evil-define-motion evil-python-move-lsb-rsb (count noerror)
   :jump t
   :type inclusive
@@ -284,7 +284,7 @@ Based off `evil-forward-char'."
   (evil-python-py-block-end))
 
 ;;][
-;;;###autoload
+;;;###autoload(autoload 'evil-python-move-rsb-lsb "evil-python-movement" nil t)
 (evil-define-motion evil-python-move-rsb-lsb (count noerror)
   :jump t
   :type inclusive
