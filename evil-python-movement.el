@@ -3,6 +3,7 @@
 ;; Copyright (C) 2018  Felipe Lema
 
 ;; Author: Felipe Lema <felipelema en mortemale punto org>
+;; Package-Requires: ((emacs "25.1") (cl-lib "0.5") (dash "2.13.0") (evil "1.0") (s "1.12.0"))
 ;; Keywords:
 
 ;; Version: 1.0
@@ -123,6 +124,7 @@ Returns new position or nil."
       (goto-char maybe-new-position))))
 
 ;; [[
+;;;###autoload
 (evil-define-motion evil-python-move-lsb-lsb (count noerror)
   "Mimic Neovim's [[ movement in Python editing.
 
@@ -133,11 +135,12 @@ Based off `evil-forward-char'."
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
   (evil-python-common-python-movement count
-				noerror
-				#'evil-python-move-backwards-to-top-level-def
-				"[["))
+				      noerror
+				      #'evil-python-move-backwards-to-top-level-def
+				      "[["))
 
 ;; ]]
+;;;###autoload
 (evil-define-motion evil-python-move-rsb-rsb (count noerror)
   "Mimic Neovim's ]] movement in Python editing.
 
@@ -152,6 +155,7 @@ Based off `evil-forward-char'."
    #'evil-python-move-forward-to-top-level-def "]]"))
 
 ;; [m
+;;;###autoload
 (evil-define-motion evil-python-move-lsb-m (count noerror)
   "Mimic Neovim's [m movement in Python editing.
 
@@ -172,6 +176,7 @@ Based off `evil-forward-char'."
     (goto-char new-pos)))
 
 ;; ]m
+;;;###autoload
 (evil-define-motion evil-python-move-rsb-m (count noerror)
   "Mimic Neovim's ]m movement in Python editing.
 
@@ -236,6 +241,7 @@ Moves to end of block and end of line."
     (message "Cannot move %s-wise" movement-name)))
 
 ;;[M
+;;;###autoload
 (evil-define-motion evil-python-move-lsb-M (count noerror)
   "Mimic Neovim's ]M movement in Python editing.
 
@@ -248,13 +254,14 @@ Based off `evil-forward-char'."
    (lambda ()
      (evil-first-non-blank)
      (evil-python-common-python-movement count
-				   noerror
-				   #'evil-python-move-backwards-to-def
-				   ;;↓ different logging here is intentional
-				   "[M"))
+					 noerror
+					 #'evil-python-move-backwards-to-def
+					 ;;↓ different logging here is intentional
+					 "[M"))
    "[M" noerror))
 
 ;;]M
+;;;###autoload
 (evil-define-motion evil-python-move-rsb-M (count noerror)
   :jump t
   :type inclusive ;; (-any '(line inclusive exclusive block) )
@@ -268,6 +275,7 @@ Based off `evil-forward-char'."
    "]M" noerror))
 
 ;;[]
+;;;###autoload
 (evil-define-motion evil-python-move-lsb-rsb (count noerror)
   :jump t
   :type inclusive
@@ -276,6 +284,7 @@ Based off `evil-forward-char'."
   (evil-python-py-block-end))
 
 ;;][
+;;;###autoload
 (evil-define-motion evil-python-move-rsb-lsb (count noerror)
   :jump t
   :type inclusive
