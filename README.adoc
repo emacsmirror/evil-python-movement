@@ -1,6 +1,6 @@
 = evil-python-movement
 
-Port of Python🐍 movement in Neovim to Evil😈+Emacs.
+Port of Python movement in Neovim to Evil+Emacs.
 
 For a visual explanation, see test/test_movement_here.py:
 
@@ -20,14 +20,14 @@ Download or clone this repo to some folder, then load main file.
 (load-file "/path/to/evil-python-movement.el/evil-python-movement.el")
 
 (require 'evil-python-movement')
-(evil-define-key 'normal python-mode-map "[[" '😈-🐍-move-lsb-lsb)
-(evil-define-key 'normal python-mode-map "]]" '😈-🐍-move-rsb-rsb)
-(evil-define-key 'normal python-mode-map "[m" '😈-🐍-move-lsb-m  )
-(evil-define-key 'normal python-mode-map "]m" '😈-🐍-move-rsb-m  )
-(evil-define-key 'normal python-mode-map "[M" '😈-🐍-Move-lsb-M  )
-(evil-define-key 'normal python-mode-map "]M" '😈-🐍-Move-rsb-M  )
-(evil-define-key 'normal python-mode-map "[]" '😈-🐍-move-lsb-rsb)
-(evil-define-key 'normal python-mode-map "][" '😈-🐍-move-lsb-rsb))
+(evil-define-key 'normal python-mode-map "[[" 'evil-python-move-lsb-lsb)
+(evil-define-key 'normal python-mode-map "]]" 'evil-python-move-rsb-rsb)
+(evil-define-key 'normal python-mode-map "[m" 'evil-python-move-lsb-m  )
+(evil-define-key 'normal python-mode-map "]m" 'evil-python-move-rsb-m  )
+(evil-define-key 'normal python-mode-map "[M" 'evil-python-Move-lsb-M  )
+(evil-define-key 'normal python-mode-map "]M" 'evil-python-Move-rsb-M  )
+(evil-define-key 'normal python-mode-map "[]" 'evil-python-move-lsb-rsb)
+(evil-define-key 'normal python-mode-map "][" 'evil-python-move-lsb-rsb))
 ----
 
 And that's it.

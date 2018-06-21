@@ -1,6 +1,6 @@
 ;;; evil-python-movement.el --- Port Neovim's python movement to Evil  -*- lexical-binding: t; -*-
 
-;; Copyright © 2018  Felipe Lema
+;; Copyright (C) 2018  Felipe Lema
 
 ;; Author: Felipe Lema <felipelema en mortemale punto org>
 ;; Keywords:
@@ -40,7 +40,7 @@
 (require 'rx)
 (require 's)
 
-(defconst 😈-🐍-top-level-def-regex
+(defconst evil-python-top-level-def-regex
   (rx
    line-start
    (|
@@ -52,7 +52,7 @@
 
 See https://docs.python.org/3/reference/grammar.html.")
 
-(defconst 😈-🐍-def-regex
+(defconst evil-python-def-regex
   (rx
    line-start
    (* blank) ;; indent
@@ -65,7 +65,7 @@ See https://docs.python.org/3/reference/grammar.html.")
 
 See https://docs.python.org/3/reference/grammar.html.")
 
-(defun 😈-🐍-move-to-regex (regex next-line-func)
+(defun evil-python-move-to-regex (regex next-line-func)
   "Call NEXT-LINE-FUNC until line is a match for REGEX.
 
 Assumes line movement
@@ -81,25 +81,25 @@ Note: need _partial_ match, not full"
 	(point)
       ;; else keep searching (if possible to move)
       (if (not (or at-first-line at-last-line))
-	  (😈-🐍-move-to-regex regex next-line-func)))))
+	  (evil-python-move-to-regex regex next-line-func)))))
 
-(defsubst 😈-🐍-move-backwards-to-top-level-def ()
+(defsubst evil-python-move-backwards-to-top-level-def ()
   "Keep moving previous-line-y until reach previous top level def."
-  (😈-🐍-move-to-regex 😈-🐍-top-level-def-regex #'evil-previous-line))
+  (evil-python-move-to-regex evil-python-top-level-def-regex #'evil-previous-line))
 
-(defsubst 😈-🐍-move-forward-to-top-level-def ()
+(defsubst evil-python-move-forward-to-top-level-def ()
   "Keep moving next-line-y until reach next top level def."
-  (😈-🐍-move-to-regex 😈-🐍-top-level-def-regex #'evil-next-line))
+  (evil-python-move-to-regex evil-python-top-level-def-regex #'evil-next-line))
 
-(defsubst 😈-🐍-move-backwards-to-def ()
+(defsubst evil-python-move-backwards-to-def ()
   "Keep moving previous-line-y until reach previous def."
-  (😈-🐍-move-to-regex 😈-🐍-def-regex #'evil-previous-line))
+  (evil-python-move-to-regex evil-python-def-regex #'evil-previous-line))
 
-(defsubst 😈-🐍-move-forward-to-def ()
+(defsubst evil-python-move-forward-to-def ()
   "Keep moving next-line-y until reach next def."
-  (😈-🐍-move-to-regex 😈-🐍-def-regex #'evil-next-line))
+  (evil-python-move-to-regex evil-python-def-regex #'evil-next-line))
 
-(defun 😈-🐍-common-python-movement (count noerror new-pos-function mov-name)
+(defun evil-python-common-python-movement (count noerror new-pos-function mov-name)
   "Try to move to position or report failure.
 
 Try to move to COUNT times to position told by NEW-POS-FUNCTION or report as
@@ -123,7 +123,7 @@ Returns new position or nil."
       (goto-char maybe-new-position))))
 
 ;; [[
-(evil-define-motion 😈-🐍-move-lsb-lsb (count noerror)
+(evil-define-motion evil-python-move-lsb-lsb (count noerror)
   "Mimic Neovim's [[ movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -132,13 +132,13 @@ Based off `evil-forward-char'."
   :type inclusive
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (😈-🐍-common-python-movement count
+  (evil-python-common-python-movement count
 				noerror
-				#'😈-🐍-move-backwards-to-top-level-def
+				#'evil-python-move-backwards-to-top-level-def
 				"[["))
 
 ;; ]]
-(evil-define-motion 😈-🐍-move-rsb-rsb (count noerror)
+(evil-define-motion evil-python-move-rsb-rsb (count noerror)
   "Mimic Neovim's ]] movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -147,12 +147,12 @@ Based off `evil-forward-char'."
   :type inclusive
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (😈-🐍-common-python-movement
+  (evil-python-common-python-movement
    count noerror
-   #'😈-🐍-move-forward-to-top-level-def "]]"))
+   #'evil-python-move-forward-to-top-level-def "]]"))
 
 ;; [m
-(evil-define-motion 😈-🐍-move-lsb-m (count noerror)
+(evil-define-motion evil-python-move-lsb-m (count noerror)
   "Mimic Neovim's [m movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -163,16 +163,16 @@ Based off `evil-forward-char'."
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
   (when-let ((new-pos (save-excursion
 			(evil-first-non-blank)
-			(let ((p (😈-🐍-common-python-movement
+			(let ((p (evil-python-common-python-movement
 				  count
 				  noerror
-				  #'😈-🐍-move-backwards-to-def
+				  #'evil-python-move-backwards-to-def
 				  "[m")))
 			  p))))
     (goto-char new-pos)))
 
 ;; ]m
-(evil-define-motion 😈-🐍-move-rsb-m (count noerror)
+(evil-define-motion evil-python-move-rsb-m (count noerror)
   "Mimic Neovim's ]m movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -181,13 +181,13 @@ Based off `evil-forward-char'."
   :type inclusive
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (😈-🐍-common-python-movement
+  (evil-python-common-python-movement
    count
    noerror
-   #'😈-🐍-move-forward-to-def
+   #'evil-python-move-forward-to-def
    "]m"))
 
-(defun 😈-🐍-py-block-end ()
+(defun evil-python-py-block-end ()
   "Return the point of end of line of current indent."
   (let ((target-indent (save-excursion
 			 (evil-first-non-blank)
@@ -217,7 +217,7 @@ Based off `evil-forward-char'."
     (evil-end-of-line)
     (point)))
 
-(defun 😈-🐍-move-to-then-to-end-of-block (move-to-fn movement-name noerror)
+(defun evil-python-move-to-then-to-end-of-block (move-to-fn movement-name noerror)
   "Move to wherever using MOVE-TO-FN, then move to end of block.
 
 Use MOVEMENT-NAME for error message.
@@ -227,7 +227,7 @@ Moves to end of block and end of line."
 			     (funcall move-to-fn)))
 	    (maybe-block-end (progn
 			       (goto-char maybe-new-pos)
-			       (😈-🐍-py-block-end))))
+			       (evil-python-py-block-end))))
       (progn
 	(goto-char maybe-block-end)
 	(evil-end-of-line)))
@@ -236,7 +236,7 @@ Moves to end of block and end of line."
     (message "Cannot move %s-wise" movement-name)))
 
 ;;[M
-(evil-define-motion 😈-🐍-move-lsb-M (count noerror)
+(evil-define-motion evil-python-move-lsb-M (count noerror)
   "Mimic Neovim's ]M movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -244,53 +244,49 @@ Based off `evil-forward-char'."
   :jump t
   :type inclusive ;; (-any '(line inclusive exclusive block) )
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (😈-🐍-move-to-then-to-end-of-block
+  (evil-python-move-to-then-to-end-of-block
    (lambda ()
      (evil-first-non-blank)
-     (😈-🐍-common-python-movement count
+     (evil-python-common-python-movement count
 				   noerror
-				   #'😈-🐍-move-backwards-to-def
+				   #'evil-python-move-backwards-to-def
 				   ;;↓ different logging here is intentional
 				   "[M"))
    "[M" noerror))
 
 ;;]M
-(evil-define-motion 😈-🐍-move-rsb-M (count noerror)
+(evil-define-motion evil-python-move-rsb-M (count noerror)
   :jump t
   :type inclusive ;; (-any '(line inclusive exclusive block) )
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (😈-🐍-move-to-then-to-end-of-block
+  (evil-python-move-to-then-to-end-of-block
    (lambda ()
      ;; reposition if necessary (when looking at blank lines)
      (cl-loop until (not (s-blank-str? (thing-at-point 'line)))
 	      do (evil-next-line))
-     (goto-char (😈-🐍-py-block-end)))
+     (goto-char (evil-python-py-block-end)))
    "]M" noerror))
 
 ;;[]
-(evil-define-motion 😈-🐍-move-lsb-rsb (count noerror)
+(evil-define-motion evil-python-move-lsb-rsb (count noerror)
   :jump t
   :type inclusive
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (😈-🐍-move-lsb-lsb count noerror)
-  (😈-🐍-py-block-end))
+  (evil-python-move-lsb-lsb count noerror)
+  (evil-python-py-block-end))
 
 ;;][
-(evil-define-motion 😈-🐍-move-rsb-lsb (count noerror)
+(evil-define-motion evil-python-move-rsb-lsb (count noerror)
   :jump t
   :type inclusive
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (let ((already-at-top-level-def (s-match 😈-🐍-top-level-def-regex
+  (let ((already-at-top-level-def (s-match evil-python-top-level-def-regex
   					   (thing-at-point 'line))
   				  )) ;; *must go to previous top level
     (unless already-at-top-level-def
-      (😈-🐍-move-lsb-lsb count noerror)))
-  (😈-🐍-py-block-end))
+      (evil-python-move-lsb-lsb count noerror)))
+  (evil-python-py-block-end))
 
 
-;; http://ergoemacs.org/emacs/elisp_run_elisp_when_file_opens.html
-;; Local Variables:
-;; eval: (evil-set-register ?e "😈-🐍-")
-;; End:
 (provide 'evil-python-movement)
 ;;; evil-python-movement.el ends here
