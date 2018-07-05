@@ -20,14 +20,14 @@ Download or clone this repo to some folder, then load main file.
 (load-file "/path/to/evil-python-movement.el/evil-python-movement.el")
 
 (require 'evil-python-movement')
-(evil-define-key 'normal python-mode-map "[[" 'evil-python-move-lsb-lsb)
-(evil-define-key 'normal python-mode-map "]]" 'evil-python-move-rsb-rsb)
-(evil-define-key 'normal python-mode-map "[m" 'evil-python-move-lsb-m  )
-(evil-define-key 'normal python-mode-map "]m" 'evil-python-move-rsb-m  )
-(evil-define-key 'normal python-mode-map "[M" 'evil-python-Move-lsb-M  )
-(evil-define-key 'normal python-mode-map "]M" 'evil-python-Move-rsb-M  )
-(evil-define-key 'normal python-mode-map "[]" 'evil-python-move-lsb-rsb)
-(evil-define-key 'normal python-mode-map "][" 'evil-python-move-lsb-rsb))
+(evil-define-key 'normal python-mode-map "[[" 'evil-python-movement-lsb-lsb)
+(evil-define-key 'normal python-mode-map "]]" 'evil-python-movement-rsb-rsb)
+(evil-define-key 'normal python-mode-map "[m" 'evil-python-movement-lsb-m  )
+(evil-define-key 'normal python-mode-map "]m" 'evil-python-movement-rsb-m  )
+(evil-define-key 'normal python-mode-map "[M" 'evil-python-movement-lsb-M  )
+(evil-define-key 'normal python-mode-map "]M" 'evil-python-movement-rsb-M  )
+(evil-define-key 'normal python-mode-map "[]" 'evil-python-movement-lsb-rsb)
+(evil-define-key 'normal python-mode-map "][" 'evil-python-movement-lsb-rsb))
 ----
 
 And that's it.

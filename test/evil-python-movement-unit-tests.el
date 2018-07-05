@@ -31,25 +31,25 @@
 ;; TODO: (require 'evil-python-movement)
 
 ;; Infrastructure
-(defvar evil-python-unit-test-python-script-to-test-against
+(defvar evil-python-movement-test-python-script-to-test-against
   (concat
    (file-name-as-directory (locate-dominating-file "." "test/test_movement_here.py"))
    "test/test_movement_here.py"))
 
-(assert (file-readable-p evil-python-unit-test-python-script-to-test-against))
+(assert (file-readable-p evil-python-movement-test-python-script-to-test-against))
 
-(defvar evil-python-unit-test-sample-buffer-cache
+(defvar evil-python-movement-test-sample-buffer-cache
   nil
   "Cache for loaded sample Python file.")
 
-(defmacro evil-python-unit-test-with-sample-buffer (&rest body)
+(defmacro evil-python-movement-test-with-sample-buffer (&rest body)
   "Load sample buffer and do (with-buffer …BODY…).
 
 Cursor will be placed somewhere around the line annotated as such."
   `(with-temp-buffer
-     (insert ,(or evil-python-unit-test-sample-buffer-cache
-		  (setq evil-python-unit-test-sample-buffer-cache
-			(f-read evil-python-unit-test-python-script-to-test-against))))
+     (insert ,(or evil-python-movement-test-sample-buffer-cache
+		  (setq evil-python-movement-test-sample-buffer-cache
+			(f-read evil-python-movement-test-python-script-to-test-against))))
      ;; place the cursor at annotated line
      (while (and (not (s-match "#.*CURSOR" (thing-at-point 'line)))
 		 (< 1 (save-excursion
@@ -60,7 +60,7 @@ Cursor will be placed somewhere around the line annotated as such."
      ,@body
      ))
 
-(defsubst evil-python-unit-test-should-match-comment (expected)
+(defsubst evil-python-movement-test-should-match-comment (expected)
   "Check that current comment should match EXPECTED.
 
 Uses the `should' macro (not `assert')."
@@ -72,7 +72,7 @@ Uses the `should' macro (not `assert')."
     (should
      (s-equals? current-comment expected))))
 
-(defsubst evil-python-unit-test-should-be-at-end-of-line ()
+(defsubst evil-python-movement-test-should-be-at-end-of-line ()
   "Check that we're currently looking at the end of line.
 
 Uses the `should' macro (not `assert')."
@@ -81,7 +81,7 @@ Uses the `should' macro (not `assert')."
 	       (evil-end-of-line)
 	       (point)))))
 
-(ert-deftest evil-python-unit-test-move-to-regex ()
+(ert-deftest evil-python-movement-test-move-to-regex ()
   (with-temp-buffer
     (insert "  aaa\n  bbb  \n  ccc  ")
     (evil-python-move-to-regex "aaa" #'previous-line)
@@ -91,95 +91,95 @@ Uses the `should' macro (not `assert')."
     (should (s-equals? "  ccc  "
 		       (thing-at-point 'line)))))
 
-(ert-deftest evil-python-unit-test-lsb-lsb ()
+(ert-deftest evil-python-movement-test-lsb-lsb ()
   "[["
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-lsb-lsb)
-   (evil-python-unit-test-should-match-comment "[[ or [m[m")))
+   (evil-python-movement-test-should-match-comment "[[ or [m[m")))
 
-(ert-deftest evil-python-unit-test-lsb-lsb×2 ()
+(ert-deftest evil-python-movement-test-lsb-lsb×2 ()
   "[[×2"
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-lsb-lsb 2)
-   (evil-python-unit-test-should-match-comment "[[[["))
+   (evil-python-movement-test-should-match-comment "[[[["))
   ;; same test, but inputted differently
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-lsb-lsb)
    (evil-python-move-lsb-lsb)
-   (evil-python-unit-test-should-match-comment "[[[[")))
+   (evil-python-movement-test-should-match-comment "[[[[")))
 
-(ert-deftest evil-python-unit-test-lsb-m ()
+(ert-deftest evil-python-movement-test-lsb-m ()
   "[m"
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-lsb-m)
-   (evil-python-unit-test-should-match-comment "[m")))
+   (evil-python-movement-test-should-match-comment "[m")))
 
-(ert-deftest evil-python-unit-test-lsb-m×2 ()
+(ert-deftest evil-python-movement-test-lsb-m×2 ()
   "[m×2"
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-lsb-m 2)
-   (evil-python-unit-test-should-match-comment "[[ or [m[m"))
+   (evil-python-movement-test-should-match-comment "[[ or [m[m"))
   ;; same test, but inputted differently
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-lsb-m)
    (evil-python-move-lsb-m)
-   (evil-python-unit-test-should-match-comment "[[ or [m[m")))
+   (evil-python-movement-test-should-match-comment "[[ or [m[m")))
 
-(ert-deftest evil-python-unit-test-rsb-m ()
+(ert-deftest evil-python-movement-test-rsb-m ()
   "]m"
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-rsb-m)
-   (evil-python-unit-test-should-match-comment "]m")))
+   (evil-python-movement-test-should-match-comment "]m")))
 
-(ert-deftest evil-python-unit-test-rsb-m×2 ()
+(ert-deftest evil-python-movement-test-rsb-m×2 ()
   "]m×2"
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-rsb-m 2)
-   (evil-python-unit-test-should-match-comment "]] or ]m]m"))
+   (evil-python-movement-test-should-match-comment "]] or ]m]m"))
   ;; same test, but inputted differently
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-rsb-m)
    (evil-python-move-rsb-m)
-   (evil-python-unit-test-should-match-comment "]] or ]m]m")))
+   (evil-python-movement-test-should-match-comment "]] or ]m]m")))
 
-(ert-deftest evil-python-unit-test-lsb-M ()
+(ert-deftest evil-python-movement-test-lsb-M ()
   "[M"
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-lsb-M)
-   (evil-python-unit-test-should-match-comment "[M")
-   (evil-python-unit-test-should-be-at-end-of-line)))
+   (evil-python-movement-test-should-match-comment "[M")
+   (evil-python-movement-test-should-be-at-end-of-line)))
 
-(ert-deftest evil-python-unit-test-rsb-M ()
+(ert-deftest evil-python-movement-test-rsb-M ()
   "]M"
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-rsb-M)
-   (evil-python-unit-test-should-match-comment "]M")
-   (evil-python-unit-test-should-be-at-end-of-line)))
+   (evil-python-movement-test-should-match-comment "]M")
+   (evil-python-movement-test-should-be-at-end-of-line)))
 
-(ert-deftest evil-python-unit-test-end-of-block ()
-  (evil-python-unit-test-with-sample-buffer
-   (evil-python-unit-test-should-match-comment "<--- CURSOR")
+(ert-deftest evil-python-movement-test-end-of-block ()
+  (evil-python-movement-test-with-sample-buffer
+   (evil-python-movement-test-should-match-comment "<--- CURSOR")
    (evil-python-move-lsb-lsb)
    (evil-python-py-block-end)
-   (evil-python-unit-test-should-match-comment "][")))
+   (evil-python-movement-test-should-match-comment "][")))
 
-(ert-deftest evil-python-unit-test-rsb-lsb ()
+(ert-deftest evil-python-movement-test-rsb-lsb ()
   "]["
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-rsb-lsb)
-   (evil-python-unit-test-should-match-comment "][")
-   (evil-python-unit-test-should-be-at-end-of-line)))
+   (evil-python-movement-test-should-match-comment "][")
+   (evil-python-movement-test-should-be-at-end-of-line)))
 
-(ert-deftest evil-python-unit-test-rsb-lsb-from-class-def ()
+(ert-deftest evil-python-movement-test-rsb-lsb-from-class-def ()
   "][ from class def"
-  (evil-python-unit-test-with-sample-buffer
+  (evil-python-movement-test-with-sample-buffer
    (evil-python-move-lsb-lsb)
    (should (s-match "^class" (thing-at-point 'line)))
    (evil-python-move-rsb-lsb)
-   (evil-python-unit-test-should-match-comment "][")
-   (evil-python-unit-test-should-be-at-end-of-line)))
+   (evil-python-movement-test-should-match-comment "][")
+   (evil-python-movement-test-should-be-at-end-of-line)))
 
-;;(ert-deftest evil-python-unit-test-indentation-and-parentheses ()
+;;(ert-deftest evil-python-movement-test-indentation-and-parentheses ()
 ;; TODO
 ;;  )
 

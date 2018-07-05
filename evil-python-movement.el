@@ -66,7 +66,7 @@ See https://docs.python.org/3/reference/grammar.html.")
 
 See https://docs.python.org/3/reference/grammar.html.")
 
-(defun evil-python-move-to-regex (regex next-line-func)
+(defun evil-python-movement-to-regex (regex next-line-func)
   "Call NEXT-LINE-FUNC until line is a match for REGEX.
 
 Assumes line movement
@@ -82,25 +82,25 @@ Note: need _partial_ match, not full"
 	(point)
       ;; else keep searching (if possible to move)
       (if (not (or at-first-line at-last-line))
-	  (evil-python-move-to-regex regex next-line-func)))))
+	  (evil-python-movement-to-regex regex next-line-func)))))
 
-(defsubst evil-python-move-backwards-to-top-level-def ()
+(defsubst evil-python-movement-backwards-to-top-level-def ()
   "Keep moving previous-line-y until reach previous top level def."
-  (evil-python-move-to-regex evil-python-top-level-def-regex #'evil-previous-line))
+  (evil-python-movement-to-regex evil-python-top-level-def-regex #'evil-previous-line))
 
-(defsubst evil-python-move-forward-to-top-level-def ()
+(defsubst evil-python-movement-forward-to-top-level-def ()
   "Keep moving next-line-y until reach next top level def."
-  (evil-python-move-to-regex evil-python-top-level-def-regex #'evil-next-line))
+  (evil-python-movement-to-regex evil-python-top-level-def-regex #'evil-next-line))
 
-(defsubst evil-python-move-backwards-to-def ()
+(defsubst evil-python-movement-backwards-to-def ()
   "Keep moving previous-line-y until reach previous def."
-  (evil-python-move-to-regex evil-python-def-regex #'evil-previous-line))
+  (evil-python-movement-to-regex evil-python-def-regex #'evil-previous-line))
 
-(defsubst evil-python-move-forward-to-def ()
+(defsubst evil-python-movement-forward-to-def ()
   "Keep moving next-line-y until reach next def."
-  (evil-python-move-to-regex evil-python-def-regex #'evil-next-line))
+  (evil-python-movement-to-regex evil-python-def-regex #'evil-next-line))
 
-(defun evil-python-common-python-movement (count noerror new-pos-function mov-name)
+(defun evil-python-movement-common-python-movement (count noerror new-pos-function mov-name)
   "Try to move to position or report failure.
 
 Try to move to COUNT times to position told by NEW-POS-FUNCTION or report as
@@ -124,8 +124,8 @@ Returns new position or nil."
       (goto-char maybe-new-position))))
 
 ;; [[
-;;;###autoload(autoload 'evil-python-move-lsb-lsb "evil-python-movement" nil t)
-(evil-define-motion evil-python-move-lsb-lsb (count noerror)
+;;;###autoload(autoload 'evil-python-movement-lsb-lsb "evil-python-movement" nil t)
+(evil-define-motion evil-python-movement-lsb-lsb (count noerror)
   "Mimic Neovim's [[ movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -134,14 +134,14 @@ Based off `evil-forward-char'."
   :type inclusive
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (evil-python-common-python-movement count
-				      noerror
-				      #'evil-python-move-backwards-to-top-level-def
-				      "[["))
+  (evil-python-movement-common-python-movement count
+					       noerror
+					       #'evil-python-movement-backwards-to-top-level-def
+					       "[["))
 
 ;; ]]
-;;;###autoload(autoload 'evil-python-move-rsb-rsb "evil-python-movement" nil t)
-(evil-define-motion evil-python-move-rsb-rsb (count noerror)
+;;;###autoload(autoload 'evil-python-movement-rsb-rsb "evil-python-movement" nil t)
+(evil-define-motion evil-python-movement-rsb-rsb (count noerror)
   "Mimic Neovim's ]] movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -150,13 +150,13 @@ Based off `evil-forward-char'."
   :type inclusive
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (evil-python-common-python-movement
+  (evil-python-movement-common-python-movement
    count noerror
-   #'evil-python-move-forward-to-top-level-def "]]"))
+   #'evil-python-movement-forward-to-top-level-def "]]"))
 
 ;; [m
-;;;###autoload(autoload 'evil-python-move-lsb-m "evil-python-movement" nil t)
-(evil-define-motion evil-python-move-lsb-m (count noerror)
+;;;###autoload(autoload 'evil-python-movement-lsb-m "evil-python-movement" nil t)
+(evil-define-motion evil-python-movement-lsb-m (count noerror)
   "Mimic Neovim's [m movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -167,17 +167,17 @@ Based off `evil-forward-char'."
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
   (when-let ((new-pos (save-excursion
 			(evil-first-non-blank)
-			(let ((p (evil-python-common-python-movement
+			(let ((p (evil-python-movement-common-python-movement
 				  count
 				  noerror
-				  #'evil-python-move-backwards-to-def
+				  #'evil-python-movement-backwards-to-def
 				  "[m")))
 			  p))))
     (goto-char new-pos)))
 
 ;; ]m
-;;;###autoload(autoload 'evil-python-move-rsb-m "evil-python-movement" nil t)
-(evil-define-motion evil-python-move-rsb-m (count noerror)
+;;;###autoload(autoload 'evil-python-movement-rsb-m "evil-python-movement" nil t)
+(evil-define-motion evil-python-movement-rsb-m (count noerror)
   "Mimic Neovim's ]m movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -186,10 +186,10 @@ Based off `evil-forward-char'."
   :type inclusive
   ;; first, test if movable
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (evil-python-common-python-movement
+  (evil-python-movement-common-python-movement
    count
    noerror
-   #'evil-python-move-forward-to-def
+   #'evil-python-movement-forward-to-def
    "]m"))
 
 (defun evil-python-py-block-end ()
@@ -222,7 +222,7 @@ Based off `evil-forward-char'."
     (evil-end-of-line)
     (point)))
 
-(defun evil-python-move-to-then-to-end-of-block (move-to-fn movement-name noerror)
+(defun evil-python-movement-to-then-to-end-of-block (move-to-fn movement-name noerror)
   "Move to wherever using MOVE-TO-FN, then move to end of block.
 
 Use MOVEMENT-NAME for error message.
@@ -241,8 +241,8 @@ Moves to end of block and end of line."
     (message "Cannot move %s-wise" movement-name)))
 
 ;;[M
-;;;###autoload(autoload 'evil-python-move-lsb-M "evil-python-movement" nil t)
-(evil-define-motion evil-python-move-lsb-M (count noerror)
+;;;###autoload(autoload 'evil-python-movement-lsb-M "evil-python-movement" nil t)
+(evil-define-motion evil-python-movement-lsb-M (count noerror)
   "Mimic Neovim's ]M movement in Python editing.
 
 See https://github.com/noctuid/evil-guide#command-properties.
@@ -250,23 +250,23 @@ Based off `evil-forward-char'."
   :jump t
   :type inclusive ;; (-any '(line inclusive exclusive block) )
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (evil-python-move-to-then-to-end-of-block
+  (evil-python-movement-to-then-to-end-of-block
    (lambda ()
      (evil-first-non-blank)
-     (evil-python-common-python-movement count
-					 noerror
-					 #'evil-python-move-backwards-to-def
-					 ;;↓ different logging here is intentional
-					 "[M"))
+     (evil-python-movement-common-python-movement count
+						  noerror
+						  #'evil-python-movement-backwards-to-def
+						  ;;↓ different logging here is intentional
+						  "[M"))
    "[M" noerror))
 
 ;;]M
-;;;###autoload(autoload 'evil-python-move-rsb-M "evil-python-movement" nil t)
-(evil-define-motion evil-python-move-rsb-M (count noerror)
+;;;###autoload(autoload 'evil-python-movement-rsb-M "evil-python-movement" nil t)
+(evil-define-motion evil-python-movement-rsb-M (count noerror)
   :jump t
   :type inclusive ;; (-any '(line inclusive exclusive block) )
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (evil-python-move-to-then-to-end-of-block
+  (evil-python-movement-to-then-to-end-of-block
    (lambda ()
      ;; reposition if necessary (when looking at blank lines)
      (cl-loop until (not (s-blank-str? (thing-at-point 'line)))
@@ -275,17 +275,17 @@ Based off `evil-forward-char'."
    "]M" noerror))
 
 ;;[]
-;;;###autoload(autoload 'evil-python-move-lsb-rsb "evil-python-movement" nil t)
-(evil-define-motion evil-python-move-lsb-rsb (count noerror)
+;;;###autoload(autoload 'evil-python-movement-lsb-rsb "evil-python-movement" nil t)
+(evil-define-motion evil-python-movement-lsb-rsb (count noerror)
   :jump t
   :type inclusive
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (evil-python-move-lsb-lsb count noerror)
+  (evil-python-movement-lsb-lsb count noerror)
   (evil-python-py-block-end))
 
 ;;][
-;;;###autoload(autoload 'evil-python-move-rsb-lsb "evil-python-movement" nil t)
-(evil-define-motion evil-python-move-rsb-lsb (count noerror)
+;;;###autoload(autoload 'evil-python-movement-rsb-lsb "evil-python-movement" nil t)
+(evil-define-motion evil-python-movement-rsb-lsb (count noerror)
   :jump t
   :type inclusive
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
@@ -293,7 +293,7 @@ Based off `evil-forward-char'."
   					   (thing-at-point 'line))
   				  )) ;; *must go to previous top level
     (unless already-at-top-level-def
-      (evil-python-move-lsb-lsb count noerror)))
+      (evil-python-movement-lsb-lsb count noerror)))
   (evil-python-py-block-end))
 
 
