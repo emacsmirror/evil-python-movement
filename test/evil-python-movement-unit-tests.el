@@ -84,98 +84,98 @@ Uses the `should' macro (not `assert')."
 (ert-deftest evil-python-movement-test-move-to-regex ()
   (with-temp-buffer
     (insert "  aaa\n  bbb  \n  ccc  ")
-    (evil-python-move-to-regex "aaa" #'previous-line)
+    (evil-python-movement-to-regex "aaa" #'previous-line)
     (should (s-equals? "  aaa\n"
 		       (thing-at-point 'line)))
-    (evil-python-move-to-regex "ccc" #'next-line)
+    (evil-python-movement-to-regex "ccc" #'next-line)
     (should (s-equals? "  ccc  "
 		       (thing-at-point 'line)))))
 
 (ert-deftest evil-python-movement-test-lsb-lsb ()
   "[["
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-lsb-lsb)
+   (evil-python-movement-lsb-lsb)
    (evil-python-movement-test-should-match-comment "[[ or [m[m")))
 
 (ert-deftest evil-python-movement-test-lsb-lsb×2 ()
   "[[×2"
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-lsb-lsb 2)
+   (evil-python-movement-lsb-lsb 2)
    (evil-python-movement-test-should-match-comment "[[[["))
   ;; same test, but inputted differently
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-lsb-lsb)
-   (evil-python-move-lsb-lsb)
+   (evil-python-movement-lsb-lsb)
+   (evil-python-movement-lsb-lsb)
    (evil-python-movement-test-should-match-comment "[[[[")))
 
 (ert-deftest evil-python-movement-test-lsb-m ()
   "[m"
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-lsb-m)
+   (evil-python-movement-lsb-m)
    (evil-python-movement-test-should-match-comment "[m")))
 
 (ert-deftest evil-python-movement-test-lsb-m×2 ()
   "[m×2"
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-lsb-m 2)
+   (evil-python-movement-lsb-m 2)
    (evil-python-movement-test-should-match-comment "[[ or [m[m"))
   ;; same test, but inputted differently
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-lsb-m)
-   (evil-python-move-lsb-m)
+   (evil-python-movement-lsb-m)
+   (evil-python-movement-lsb-m)
    (evil-python-movement-test-should-match-comment "[[ or [m[m")))
 
 (ert-deftest evil-python-movement-test-rsb-m ()
   "]m"
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-rsb-m)
+   (evil-python-movement-rsb-m)
    (evil-python-movement-test-should-match-comment "]m")))
 
 (ert-deftest evil-python-movement-test-rsb-m×2 ()
   "]m×2"
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-rsb-m 2)
+   (evil-python-movement-rsb-m 2)
    (evil-python-movement-test-should-match-comment "]] or ]m]m"))
   ;; same test, but inputted differently
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-rsb-m)
-   (evil-python-move-rsb-m)
+   (evil-python-movement-rsb-m)
+   (evil-python-movement-rsb-m)
    (evil-python-movement-test-should-match-comment "]] or ]m]m")))
 
 (ert-deftest evil-python-movement-test-lsb-M ()
   "[M"
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-lsb-M)
+   (evil-python-movement-lsb-M)
    (evil-python-movement-test-should-match-comment "[M")
    (evil-python-movement-test-should-be-at-end-of-line)))
 
 (ert-deftest evil-python-movement-test-rsb-M ()
   "]M"
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-rsb-M)
+   (evil-python-movement-rsb-M)
    (evil-python-movement-test-should-match-comment "]M")
    (evil-python-movement-test-should-be-at-end-of-line)))
 
 (ert-deftest evil-python-movement-test-end-of-block ()
   (evil-python-movement-test-with-sample-buffer
    (evil-python-movement-test-should-match-comment "<--- CURSOR")
-   (evil-python-move-lsb-lsb)
+   (evil-python-movement-lsb-lsb)
    (evil-python-py-block-end)
    (evil-python-movement-test-should-match-comment "][")))
 
 (ert-deftest evil-python-movement-test-rsb-lsb ()
   "]["
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-rsb-lsb)
+   (evil-python-movement-rsb-lsb)
    (evil-python-movement-test-should-match-comment "][")
    (evil-python-movement-test-should-be-at-end-of-line)))
 
 (ert-deftest evil-python-movement-test-rsb-lsb-from-class-def ()
   "][ from class def"
   (evil-python-movement-test-with-sample-buffer
-   (evil-python-move-lsb-lsb)
+   (evil-python-movement-lsb-lsb)
    (should (s-match "^class" (thing-at-point 'line)))
-   (evil-python-move-rsb-lsb)
+   (evil-python-movement-rsb-lsb)
    (evil-python-movement-test-should-match-comment "][")
    (evil-python-movement-test-should-be-at-end-of-line)))
 
