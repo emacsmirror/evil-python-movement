@@ -160,7 +160,7 @@ Uses the `should' macro (not `assert')."
   (evil-python-movement-test-with-sample-buffer
    (evil-python-movement-test-should-match-comment "<--- CURSOR")
    (evil-python-movement-lsb-lsb)
-   (evil-python-py-block-end)
+   (evil-python-movement-py-block-end)
    (evil-python-movement-test-should-match-comment "][")))
 
 (ert-deftest evil-python-movement-test-rsb-lsb ()

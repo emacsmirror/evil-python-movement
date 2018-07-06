@@ -41,7 +41,7 @@
 (require 'rx)
 (require 's)
 
-(defconst evil-python-top-level-def-regex
+(defconst evil-python-movement-top-level-def-regex
   (rx
    line-start
    (|
@@ -53,7 +53,7 @@
 
 See https://docs.python.org/3/reference/grammar.html.")
 
-(defconst evil-python-def-regex
+(defconst evil-python-movement-def-regex
   (rx
    line-start
    (* blank) ;; indent
@@ -86,19 +86,19 @@ Note: need _partial_ match, not full"
 
 (defsubst evil-python-movement-backwards-to-top-level-def ()
   "Keep moving previous-line-y until reach previous top level def."
-  (evil-python-movement-to-regex evil-python-top-level-def-regex #'evil-previous-line))
+  (evil-python-movement-to-regex evil-python-movement-top-level-def-regex #'evil-previous-line))
 
 (defsubst evil-python-movement-forward-to-top-level-def ()
   "Keep moving next-line-y until reach next top level def."
-  (evil-python-movement-to-regex evil-python-top-level-def-regex #'evil-next-line))
+  (evil-python-movement-to-regex evil-python-movement-top-level-def-regex #'evil-next-line))
 
 (defsubst evil-python-movement-backwards-to-def ()
   "Keep moving previous-line-y until reach previous def."
-  (evil-python-movement-to-regex evil-python-def-regex #'evil-previous-line))
+  (evil-python-movement-to-regex evil-python-movement-def-regex #'evil-previous-line))
 
 (defsubst evil-python-movement-forward-to-def ()
   "Keep moving next-line-y until reach next def."
-  (evil-python-movement-to-regex evil-python-def-regex #'evil-next-line))
+  (evil-python-movement-to-regex evil-python-movement-def-regex #'evil-next-line))
 
 (defun evil-python-movement-common-python-movement (count noerror new-pos-function mov-name)
   "Try to move to position or report failure.
@@ -192,7 +192,7 @@ Based off `evil-forward-char'."
    #'evil-python-movement-forward-to-def
    "]m"))
 
-(defun evil-python-py-block-end ()
+(defun evil-python-movement-py-block-end ()
   "Return the point of end of line of current indent."
   (let ((target-indent (save-excursion
 			 (evil-first-non-blank)
@@ -232,7 +232,7 @@ Moves to end of block and end of line."
 			     (funcall move-to-fn)))
 	    (maybe-block-end (progn
 			       (goto-char maybe-new-pos)
-			       (evil-python-py-block-end))))
+			       (evil-python-movement-py-block-end))))
       (progn
 	(goto-char maybe-block-end)
 	(evil-end-of-line)))
@@ -271,7 +271,7 @@ Based off `evil-forward-char'."
      ;; reposition if necessary (when looking at blank lines)
      (cl-loop until (not (s-blank-str? (thing-at-point 'line)))
 	      do (evil-next-line))
-     (goto-char (evil-python-py-block-end)))
+     (goto-char (evil-python-movement-py-block-end)))
    "]M" noerror))
 
 ;;[]
@@ -281,7 +281,7 @@ Based off `evil-forward-char'."
   :type inclusive
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
   (evil-python-movement-lsb-lsb count noerror)
-  (evil-python-py-block-end))
+  (evil-python-movement-py-block-end))
 
 ;;][
 ;;;###autoload(autoload 'evil-python-movement-rsb-lsb "evil-python-movement" nil t)
@@ -289,12 +289,12 @@ Based off `evil-forward-char'."
   :jump t
   :type inclusive
   (interactive "<c>" (list (evil-kbd-macro-suppress-motion-error)))
-  (let ((already-at-top-level-def (s-match evil-python-top-level-def-regex
+  (let ((already-at-top-level-def (s-match evil-python-movement-top-level-def-regex
   					   (thing-at-point 'line))
   				  )) ;; *must go to previous top level
     (unless already-at-top-level-def
       (evil-python-movement-lsb-lsb count noerror)))
-  (evil-python-py-block-end))
+  (evil-python-movement-py-block-end))
 
 
 (provide 'evil-python-movement)
