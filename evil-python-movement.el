@@ -1,10 +1,10 @@
-;;; evil-python-movement.el --- Port Neovim's python movement to Evil  -*- lexical-binding: t; -*-
+;;; evil-python-movement.el --- Port Neovim's python movement to Evil -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018  Felipe Lema
 
 ;; Author: Felipe Lema <felipelema en mortemale punto org>
+;; URL: https://bitbucket.org/FelipeLema/evil-python-movement.el/
 ;; Package-Requires: ((emacs "25.1") (cl-lib "0.5") (dash "2.13.0") (evil "1.0") (s "1.12.0"))
-;; Keywords:
 
 ;; Version: 1.0
 
