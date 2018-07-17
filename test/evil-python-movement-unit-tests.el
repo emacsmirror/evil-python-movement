@@ -26,9 +26,9 @@
   (require 'cl))
 (require 'ert)
 (require 'evil)
+(require 'evil-python-movement)
 (require 'f)
 (require 's)
-;; TODO: (require 'evil-python-movement)
 
 ;; Infrastructure
 (defvar evil-python-movement-test-python-script-to-test-against
