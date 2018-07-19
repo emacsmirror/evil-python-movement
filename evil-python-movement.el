@@ -41,30 +41,35 @@
 (require 'rx)
 (require 's)
 
-(defconst evil-python-movement-top-level-def-regex
-  (rx
-   line-start
-   (|
+(defconst evil-python-movement-def-or-class-regex
+  `(|
     ;; async_funcdef | funcdef
     (and (? "async" (+ blank)) "def" (+ blank))
     ;; class
-    (and "class" (+ blank))))
+    (and "class" (+ blank)))
+  "Regex for (func or class)
+
+This is common regex between `evil-python-movement-top-level-def-regex'
+and `evil-python-movement-def-regex' and it's not supposed
+to be used as-is for matching anything.
+See https://docs.python.org/3/reference/grammar.html.")
+
+(defconst evil-python-movement-top-level-def-regex
+  (rx
+   line-start
+   (eval evil-python-movement-def-or-class-regex))
   "Regex for top level def (func or class)
 
-See https://docs.python.org/3/reference/grammar.html.")
+See `evil-python-movement-def-or-class-regex' for more info.")
 
 (defconst evil-python-movement-def-regex
   (rx
    line-start
    (* blank) ;; indent
-   (|
-    ;; async_funcdef | funcdef
-    (and (? "async" (+ blank)) "def" (+ blank))
-    ;; class
-    (and "class" (+ blank))))
+   (eval evil-python-movement-def-or-class-regex))
   "Regex for def (func or class)
 
-See https://docs.python.org/3/reference/grammar.html.")
+See `evil-python-movement-def-or-class-regex' for more info.")
 
 (defun evil-python-movement-to-regex (regex next-line-func)
   "Call NEXT-LINE-FUNC until line is a match for REGEX.
